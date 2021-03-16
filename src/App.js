@@ -95,7 +95,7 @@ class App extends Component {
 
   makeNewToDoList = () => {
     let newToDoList = {
-      id: this.highListId,
+      id: this.state.nextListId,
       name: 'Untitled',
       items: []
     };
@@ -142,6 +142,33 @@ class App extends Component {
     localStorage.setItem("recent_work", toDoListsString);
   }
 
+  toDoListItemMoveCallback = (toDoListItem, operation) => {
+    let newToDoItemsList = this.state.currentList.items;
+    const index = newToDoItemsList.indexOf(toDoListItem);
+
+    let tempItem = newToDoItemsList[index];
+
+    if(operation === "moveItemUp"){
+      newToDoItemsList[index] = newToDoItemsList[index-1]
+      newToDoItemsList[index-1] = tempItem;
+    }
+
+    else if(operation === "moveItemDown"){
+      newToDoItemsList[index] = newToDoItemsList[index+1]
+      newToDoItemsList[index+1] = tempItem;   
+    }
+
+    else if(operation === "moveItemClose"){
+      newToDoItemsList.splice(index, 1);
+      // return tempItem;
+    }
+
+    this.setState({
+      currentList: {items: newToDoItemsList}
+    });
+  }
+
+
   render() {
     let items = this.state.currentList.items;
     return (
@@ -156,6 +183,7 @@ class App extends Component {
           toDoListItems={items} 
           addNewToDoListItemCallback={this.addNewToDoListItem}
           deleteListCallback={this.deleteList}
+          toDoListItemMoveCallback={this.toDoListItemMoveCallback}
         />
       </div>
     );

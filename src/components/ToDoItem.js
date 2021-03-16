@@ -17,6 +17,18 @@ class ToDoItem extends Component {
         console.log("\t\t\tToDoItem " + this.props.toDoListItem.id + " did mount");
     }
 
+    handleListItemUp = () => {
+        this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemUp");
+    }
+
+    handleListItemDown = () => {
+        this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemDown");
+    }
+
+    handleListItemClose = () => {
+        this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemClose");
+    }
+
     render() {
         // DISPLAY WHERE WE ARE
         console.log("\t\t\tToDoItem render");
@@ -32,9 +44,9 @@ class ToDoItem extends Component {
                 <div className='status-col' className={statusType}>{listItem.status}</div>
                 <div className='test-4-col'></div>
                 <div className='list-controls-col'>
-                    <KeyboardArrowUp className='list-item-control todo-button' />
-                    <KeyboardArrowDown className='list-item-control todo-button' />
-                    <Close className='list-item-control todo-button' />
+                    <KeyboardArrowUp className='list-item-control todo-button' onClick={this.handleListItemUp} />
+                    <KeyboardArrowDown className='list-item-control todo-button' onClick={this.handleListItemDown}/>
+                    <Close className='list-item-control todo-button' onClick={this.handleListItemClose}/>
                     <div className='list-item-control'></div>
         <div className='list-item-control'></div>
                 </div>
