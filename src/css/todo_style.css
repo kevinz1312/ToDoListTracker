@@ -75,6 +75,10 @@
     font-weight: bold;
 }
 
+.list-item-card:hover {
+    background-color: var(--swatch-contrast);
+}
+
 .todo-list-button {
     cursor:pointer;
     background-color: var(--swatch-complement);
@@ -93,6 +97,10 @@
 
 .todo-button:hover {
     background-color: var(--swatch-contrast);
+}
+
+.todo-list-selected{
+    background-color: var(--swatch-accent);
 }
 
 #add-list-button {

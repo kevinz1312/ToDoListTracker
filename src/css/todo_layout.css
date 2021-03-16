@@ -1,43 +1,46 @@
 #root {
     position:absolute;
-    width:98%;
-    left:1%;
+    width:100%;
     height:100%;
+    left: 0px;
+    top: 0px;
+    /* padding: 10px; */
 }
 
 #navbar {
-    position:absolute;
-    height: 50px;
-    top:0%;
-    left:0%;
-    width: 100%;
-    height: 5%;
-    margin:auto;
-    padding-left: 10px;
+    padding: 20px 20px 20px 22px;
+    /* margin: auto; */
+    margin: 8px 0px 0px 5px;
+    width:96.5%
 }
 
 #title-div {
     position: absolute;
-    top:7px;
+    top: 15px;
+    left: 15px;
 }
 
 #left-sidebar {
     position:absolute;
-    height:94%;
-    width:13%;
-    top:5.5%;
-    left:0%;
+    height: 93%;
+    width: 14%;
+    /* top: 6%; */
+    left: 5px;
     padding-left: 15px;
+    margin: 10px 0px 0px 0px;
+
 }
 
 #workspace {
     position:absolute;
-    height:94%;
-    width:85.5%;
-    top:5.5%;
-    left:13%;
-    padding-left: 15px;
-    padding-right: 25px;
+    height:93%;
+    width:83%;
+    /* top:5.5%; */
+    left:14.5%;
+    padding: 0px 16px 0px 15px;
+    margin: 10px 15px 15px 0px;
+    /* padding-left: 15px; */
+    /* padding-right: 25px; */
     grid-column: 2 span 1;
     grid-row: 2 span 1;
     display: flex;
@@ -47,8 +50,8 @@
 #left-sidebar-header {
     padding-top:25px;
     height:4%;
-    top:3%;
-    width: 80%;
+    top:10%;
+    width: 85%;
     display: grid;
     grid-template-columns: 60% 40%;
     white-space: nowrap;
@@ -96,7 +99,37 @@
     flex-direction: row;
 }
 
+.list-header-card{
+    display: flex;
+    flex-direction: row;
+}
+
 .item-col {
+    width:25%;
+}
+
+.task-col {
+    padding: 11px;
+    width:22%;
+}
+
+.due-date-col {
+    padding: 11px;
+    width:22%;
+}
+
+.status-col {
+    padding: 11px;
+    width:22%
+}
+
+.list-controls-col {
+    width:22%;
+    display: flex;
+    flex-direction: row;
+}
+
+.test-4-col{
     width:25%;
 }
 

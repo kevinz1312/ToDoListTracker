@@ -12,18 +12,26 @@ class Workspace extends Component {
         super(props);
     }
 
+    handleAddNewListItem = () => {
+        this.props.addNewToDoListItemCallback();
+    }
+
+    handleDeleteList = () => {
+        this.props.deleteListCallback();
+    }
+
     render() {
         return (
             <div id="workspace">
-                <div id="todo-list-header-card" className="list-item-card">
+                <div id="todo-list-header-card" className="list-header-card">
                     <div id="task-col-header" className="item-col todo-button">Task</div>
                     <div id="date-col-header" className="item-col todo-button">Due Date</div>
                     <div id="status-col-header" className="item-col todo-button">Status</div>
                     <div className="item-col" display="flex" flexDirection="row" flexWrap="nowrap">
                         <Undo id="undo-button" className="list-item-control material-icons todo-button" />
                         <Redo id="redo-button" className="list-item-control material-icons todo-button" />
-                        <AddBox id="add-item-button" className="list-item-control material-icons todo-button" />
-                        <Delete id="delete-list-button" className="list-item-control material-icons todo-button" />
+                        <AddBox id="add-item-button" className="list-item-control material-icons todo-button" onClick={this.handleAddNewListItem} />
+                        <Delete id="delete-list-button" className="list-item-control material-icons todo-button" onClick={this.handleDeleteList}/>
                         <Close id="close-list-button" className="list-item-control material-icons todo-button" />
                     </div>
                 </div>

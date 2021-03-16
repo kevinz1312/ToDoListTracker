@@ -21,10 +21,12 @@ class ListLink extends Component {
     render() {
         // DISPLAY WHERE WE ARE
         console.log("\t\t\tListLink render");
-
+        let statusType = "todo-list-not-selected";
+        if (this.props.highlight === "true")
+            statusType = "todo-list-selected";
         return (
             <div 
-                className='todo-list-button'
+                className={`todo-list-button ${statusType} `}
                 onClick={this.handleLoadList}
             >
                 {this.props.toDoList.name}<br />

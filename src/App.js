@@ -61,9 +61,17 @@ class App extends Component {
     console.log("loading " + toDoList);
 
     // MAKE SURE toDoList IS AT THE TOP OF THE STACK BY REMOVING THEN PREPENDING
-    const nextLists = this.state.toDoLists.filter(testList =>
+    let nextLists = this.state.toDoLists.filter(testList =>
       testList.id !== toDoList.id
     );
+
+    //REMOVE HIGHLIGHT FROM ALL LISTS
+    nextLists.forEach((testList)=>{testList.highlight = "false";})
+
+    //ADD HIGHLIGHT TO TOP LIST
+    toDoList.highlight = "true";
+    
+    //ADD BACK TO TOP OF STACK
     nextLists.unshift(toDoList);
 
     this.setState({
@@ -94,6 +102,17 @@ class App extends Component {
     return newToDoList;
   }
 
+  addNewToDoListItem = () => {
+    let newToDoListItemInList = [this.makeNewToDoListItem()];
+    let newToDoListItemsList = [...this.state.currentList.items, ...newToDoListItemInList];
+
+    // AND SET THE STATE, WHICH SHOULD FORCE A RENDER
+    this.setState({
+      currentList: {items: newToDoListItemsList}
+    }, this.afterToDoListsChangeComplete);
+
+  }
+
   makeNewToDoListItem = () =>  {
     let newToDoListItem = {
       description: "No Description",
@@ -103,6 +122,17 @@ class App extends Component {
     return newToDoListItem;
   }
 
+  deleteList = () => {
+    let newToDoListsList = this.state.toDoLists;
+    newToDoListsList.shift();
+
+    // AND SET THE STATE, WHICH SHOULD FORCE A render
+    this.setState({
+      toDoLists: newToDoListsList,
+      currentList: {items: []},
+    }, this.afterToDoListsChangeComplete);
+  }
+  
   // THIS IS A CALLBACK FUNCTION FOR AFTER AN EDIT TO A LIST
   afterToDoListsChangeComplete = () => {
     console.log("App updated currentToDoList: " + this.state.currentList);
@@ -122,7 +152,11 @@ class App extends Component {
           loadToDoListCallback={this.loadToDoList}
           addNewListCallback={this.addNewList}
         />
-        <Workspace toDoListItems={items} />
+        <Workspace 
+          toDoListItems={items} 
+          addNewToDoListItemCallback={this.addNewToDoListItem}
+          deleteListCallback={this.deleteList}
+        />
       </div>
     );
   }
