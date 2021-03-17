@@ -37,14 +37,17 @@ class ToDoItem extends Component {
 
     handleDescriptionChange = (event) => {
         this.props.toDoListItemChangeCallback(this.props.toDoListItem, "description", event.target.value);
+        this.setState({taskBeingEdited : false})
     }
 
     handleDateChange = (event) => {
         this.props.toDoListItemChangeCallback(this.props.toDoListItem, "date", event.target.value);
+        this.setState({dateBeingEdited : false})
     }
 
     handleStatusChange = (event) => {
         this.props.toDoListItemChangeCallback(this.props.toDoListItem, "status", event.target.value);
+        this.setState({stausBeingEdited : false})
     }
 
     render() {
@@ -61,19 +64,19 @@ class ToDoItem extends Component {
 
         return (
             <div id={'todo-list-item-' + listItem.id} className='list-item-card'>
-
+ {/* onChange={this.handleDescriptionChange} */}
                 {taskBeingEdited 
-                ? <input className='task-col' type="text" value={listItem.description} onChange={this.handleDescriptionChange} onBlur={() => {this.setState({taskBeingEdited : false})}} autoFocus/>
+                ? <input className='task-col' type="text" defaultValue={listItem.description} onBlur={this.handleDescriptionChange} autoFocus/>
                 : <div className='task-col' onClick= { () => {this.setState({taskBeingEdited: true})}}>{listItem.description}</div>
                 }
 
                 {dateBeingEdited
-                ? <input type='date' class='due-date-col' value ={listItem.due_date} onChange={this.handleDateChange} onBlur={() => {this.setState({dateBeingEdited : false})}} autoFocus/>
+                ? <input type='date' class='due-date-col' defaultValue ={listItem.due_date} onBlur={this.handleDateChange} autoFocus/>
                 : <div className='due-date-col' onClick= { () => {this.setState({dateBeingEdited: true})}}>{listItem.due_date}</div>
                 }
 
                 {stausBeingEdited
-                ? <select class='status-col' onChange={this.handleStatusChange} onBlur={() => {this.setState({stausBeingEdited : false})}} value = {listItem.status} autoFocus><option value='complete'>Complete</option> <option value='incomplete'>Incomplete</option></select>
+                ? <select class='status-col' onBlur={this.handleStatusChange} defaultValue = {listItem.status} autoFocus><option value='complete'>Complete</option> <option value='incomplete'>Incomplete</option></select>
                 : <div className='status-col' className={statusType} onClick= { () => {this.setState({stausBeingEdited: true})}}>{listItem.status}</div>
                 } 
 

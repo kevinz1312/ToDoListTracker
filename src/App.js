@@ -3,6 +3,11 @@ import React, { Component } from 'react';
 import testData from './test/testData.json'
 import jsTPS from './common/jsTPS'
 
+// IMPORT TRANSACTIONS
+import AddNewItem_Transaction from './components/transactions/AddNewItem_Transaction.js'
+import MoveItem_Transaction from './components/transactions/MoveItem_Transaction.js'
+import ChangeItem_Transaction from './components/transactions/ChangeItem_Transaction.js'
+
 // THESE ARE OUR REACT COMPONENTS
 import Navbar from './components/Navbar'
 import LeftSidebar from './components/LeftSidebar'
@@ -102,17 +107,27 @@ class App extends Component {
     return newToDoList;
   }
 
-  addNewToDoListItem = () => {
-    // let newToDoListItemInList = [this.makeNewToDoListItem()];
-    // let newToDoListItemsList = [...this.state.currentList.items, ...newToDoListItemInList];
+  addNewToDoListItem = (item) => {
     let newToDoList = this.state.currentList;
-    newToDoList.items.push(this.makeNewToDoListItem())
-    // AND SET THE STATE, WHICH SHOULD FORCE A RENDER
-    this.setState({
-      currentList: newToDoList,
-      nextListItemId: this.state.nextListItemId+1
-    });
+    if(item != null){
+      newToDoList.items.push(item)
+      this.setState({
+        currentList: newToDoList,
+      });
+    }
 
+    else{
+      let newItem = this.makeNewToDoListItem()
+      newToDoList.items.push(newItem)
+
+      // AND SET THE STATE, WHICH SHOULD FORCE A RENDER
+      this.setState({
+        currentList: newToDoList,
+        nextListItemId: this.state.nextListItemId+1
+      });
+      console.log("here")
+      return newItem;
+    }
   }
 
   makeNewToDoListItem = () =>  {
@@ -136,6 +151,17 @@ class App extends Component {
     }, this.afterToDoListsChangeComplete);
   }
   
+  deleteListItem = (toDoListItem) => {
+    let newToDoItemsList = this.state.currentList.items;
+    const index = newToDoItemsList.indexOf(toDoListItem);
+
+    newToDoItemsList.splice(index, 1);
+
+    this.setState({
+      currentList: {items: newToDoItemsList}
+    });
+  }
+
   // THIS IS A CALLBACK FUNCTION FOR AFTER AN EDIT TO A LIST
   afterToDoListsChangeComplete = () => {
     console.log("App updated currentToDoList: " + this.state.currentList);
@@ -145,9 +171,9 @@ class App extends Component {
     localStorage.setItem("recent_work", toDoListsString);
   }
 
-  toDoListItemMove = (toDoListItem, operation) => {
+  toDoListItemMove = (toDoListItem, operation, transactionIndex) => {
     let newToDoItemsList = this.state.currentList.items;
-    const index = newToDoItemsList.indexOf(toDoListItem);
+    let index = newToDoItemsList.indexOf(toDoListItem);
 
     let tempItem = newToDoItemsList[index];
 
@@ -163,12 +189,16 @@ class App extends Component {
 
     else if(operation === "moveItemClose"){
       newToDoItemsList.splice(index, 1);
-      // return tempItem;
+    }
+
+    else if(operation === "moveItemOpen"){
+      newToDoItemsList.splice(transactionIndex, 0, toDoListItem);
     }
 
     this.setState({
       currentList: {items: newToDoItemsList}
     });
+    return index;
   }
 
   toDoListItemChange = (toDoListItem, operation, value) =>{
@@ -194,6 +224,36 @@ class App extends Component {
     });
   }
 
+  undoListItem = () => {
+      if (this.tps.hasTransactionToUndo()) {
+        this.tps.undoTransaction();
+        // this.toggleUndoRedoButtons();
+    }
+  }
+
+  redoListItem = () => {
+      if (this.tps.hasTransactionToRedo()) {
+        this.tps.doTransaction();
+        // this.toggleUndoRedoButtons();
+    }
+  }
+
+  addNewItemTransaction = () => {
+    let transaction = new AddNewItem_Transaction(this);
+    this.tps.addTransaction(transaction);
+    // this.toggleUndoRedoButtons();
+  }
+
+  toDoListItemMoveTransaction = (toDoListItem, operation) => {
+    let transaction = new MoveItem_Transaction(this, toDoListItem, operation);
+    this.tps.addTransaction(transaction);
+  }
+
+  toDoListItemChangeTransaction = (toDoListItem, operation, value) => {
+    let transaction = new ChangeItem_Transaction(this, toDoListItem, operation, value);
+    this.tps.addTransaction(transaction);
+  }
+
   render() {
     let items = this.state.currentList.items;
     return (
@@ -206,10 +266,13 @@ class App extends Component {
         />
         <Workspace 
           toDoListItems={items} 
-          addNewToDoListItemCallback={this.addNewToDoListItem}
+          addNewToDoListItemCallback={this.addNewItemTransaction}
           deleteListCallback={this.deleteList}
-          toDoListItemMoveCallback={this.toDoListItemMove}
-          toDoListItemChangeCallback = {this.toDoListItemChange}
+          toDoListItemMoveCallback={this.toDoListItemMoveTransaction}
+          toDoListItemChangeCallback = {this.toDoListItemChangeTransaction}
+          UndoListItemCallback = {this.undoListItem}
+          RedoListItemCallback = {this.redoListItem}
+
         />
       </div>
     );
