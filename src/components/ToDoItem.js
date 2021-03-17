@@ -10,6 +10,12 @@ class ToDoItem extends Component {
         
         // DISPLAY WHERE WE ARE
         console.log("\t\t\tToDoItem " + this.props.toDoListItem.id + " constructor");
+
+        this.state = {
+            taskBeingEdited : false ,
+            dateBeingEdited : false ,
+            stausBeingEdited : false
+        }
     }
 
     componentDidMount = () => {
@@ -29,6 +35,18 @@ class ToDoItem extends Component {
         this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemClose");
     }
 
+    handleDescriptionChange = (event) => {
+        this.props.toDoListItemChangeCallback(this.props.toDoListItem, "description", event.target.value);
+    }
+
+    handleDateChange = (event) => {
+        this.props.toDoListItemChangeCallback(this.props.toDoListItem, "date", event.target.value);
+    }
+
+    handleStatusChange = (event) => {
+        this.props.toDoListItemChangeCallback(this.props.toDoListItem, "status", event.target.value);
+    }
+
     render() {
         // DISPLAY WHERE WE ARE
         console.log("\t\t\tToDoItem render");
@@ -37,11 +55,28 @@ class ToDoItem extends Component {
         if (listItem.status === "incomplete")
             statusType = "status-incomplete";
 
+        let taskBeingEdited = this.state.taskBeingEdited;
+        let dateBeingEdited = this.state.dateBeingEdited;
+        let stausBeingEdited = this.state.stausBeingEdited;
+
         return (
             <div id={'todo-list-item-' + listItem.id} className='list-item-card'>
-                <div className='task-col'>{listItem.description}</div>
-                <div className='due-date-col'>{listItem.due_date}</div>
-                <div className='status-col' className={statusType}>{listItem.status}</div>
+
+                {taskBeingEdited 
+                ? <input className='task-col' type="text" value={listItem.description} onChange={this.handleDescriptionChange} onBlur={() => {this.setState({taskBeingEdited : false})}} autoFocus/>
+                : <div className='task-col' onClick= { () => {this.setState({taskBeingEdited: true})}}>{listItem.description}</div>
+                }
+
+                {dateBeingEdited
+                ? <input type='date' class='due-date-col' value ={listItem.due_date} onChange={this.handleDateChange} onBlur={() => {this.setState({dateBeingEdited : false})}} autoFocus/>
+                : <div className='due-date-col' onClick= { () => {this.setState({dateBeingEdited: true})}}>{listItem.due_date}</div>
+                }
+
+                {stausBeingEdited
+                ? <select class='status-col' onChange={this.handleStatusChange} onBlur={() => {this.setState({stausBeingEdited : false})}} value = {listItem.status} autoFocus><option value='complete'>Complete</option> <option value='incomplete'>Incomplete</option></select>
+                : <div className='status-col' className={statusType} onClick= { () => {this.setState({stausBeingEdited: true})}}>{listItem.status}</div>
+                } 
+
                 <div className='test-4-col'></div>
                 <div className='list-controls-col'>
                     <KeyboardArrowUp className='list-item-control todo-button' onClick={this.handleListItemUp} />

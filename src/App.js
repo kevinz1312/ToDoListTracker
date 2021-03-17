@@ -103,21 +103,24 @@ class App extends Component {
   }
 
   addNewToDoListItem = () => {
-    let newToDoListItemInList = [this.makeNewToDoListItem()];
-    let newToDoListItemsList = [...this.state.currentList.items, ...newToDoListItemInList];
-
+    // let newToDoListItemInList = [this.makeNewToDoListItem()];
+    // let newToDoListItemsList = [...this.state.currentList.items, ...newToDoListItemInList];
+    let newToDoList = this.state.currentList;
+    newToDoList.items.push(this.makeNewToDoListItem())
     // AND SET THE STATE, WHICH SHOULD FORCE A RENDER
     this.setState({
-      currentList: {items: newToDoListItemsList}
-    }, this.afterToDoListsChangeComplete);
+      currentList: newToDoList,
+      nextListItemId: this.state.nextListItemId+1
+    });
 
   }
 
   makeNewToDoListItem = () =>  {
     let newToDoListItem = {
       description: "No Description",
-      dueDate: "none",
-      status: "incomplete"
+      due_date: "No Date",
+      status: "incomplete",
+      id: this.state.nextListItemId
     };
     return newToDoListItem;
   }
@@ -142,7 +145,7 @@ class App extends Component {
     localStorage.setItem("recent_work", toDoListsString);
   }
 
-  toDoListItemMoveCallback = (toDoListItem, operation) => {
+  toDoListItemMove = (toDoListItem, operation) => {
     let newToDoItemsList = this.state.currentList.items;
     const index = newToDoItemsList.indexOf(toDoListItem);
 
@@ -168,6 +171,28 @@ class App extends Component {
     });
   }
 
+  toDoListItemChange = (toDoListItem, operation, value) =>{
+    let newToDoItemsList = this.state.currentList.items;
+    const index = newToDoItemsList.indexOf(toDoListItem);
+
+    let tempItem = newToDoItemsList[index];
+
+    if(operation === "description")
+    tempItem.description = value;
+
+    else if (operation === "date")
+    tempItem.due_date = value;
+
+    else if (operation === "status"){
+    tempItem.status = value;
+    console.log("asdasd" + tempItem.status)
+    }
+    newToDoItemsList[index] = tempItem;
+
+    this.setState({
+      currentList: {items: newToDoItemsList}
+    });
+  }
 
   render() {
     let items = this.state.currentList.items;
@@ -183,7 +208,8 @@ class App extends Component {
           toDoListItems={items} 
           addNewToDoListItemCallback={this.addNewToDoListItem}
           deleteListCallback={this.deleteList}
-          toDoListItemMoveCallback={this.toDoListItemMoveCallback}
+          toDoListItemMoveCallback={this.toDoListItemMove}
+          toDoListItemChangeCallback = {this.toDoListItemChange}
         />
       </div>
     );
