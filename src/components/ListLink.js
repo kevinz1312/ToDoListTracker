@@ -7,6 +7,10 @@ class ListLink extends Component {
         
         // DISPLAY WHERE WE ARE
         console.log("\t\t\tListLink " + this.props.toDoList.key + " constructor");
+
+        this.state = {
+            nameBeingEdited : false ,
+        }
     }
 
     componentDidMount = () => {
@@ -18,21 +22,28 @@ class ListLink extends Component {
         this.props.loadToDoListCallback(this.props.toDoList);
     }
 
+    handleNameChange = (event) => {
+        this.props.toDoListNameChangeCallback(this.props.toDoList, event.target.value);
+        this.setState({nameBeingEdited : false})
+    }
+
     render() {
         // DISPLAY WHERE WE ARE
         console.log("\t\t\tListLink render");
+        let nameBeingEdited = this.state.nameBeingEdited;
+
         let statusType = "todo-list-not-selected";
         if (this.props.highlight === "true")
             statusType = "todo-list-selected";
-        return (
-            <div 
-                className={`todo-list-button ${statusType} `}
-                onClick={this.handleLoadList}
-            >
-                {this.props.toDoList.name}<br />
-            </div>
-        )
-    }
-}
 
+        return (
+            <div>
+                {nameBeingEdited 
+                ? <input className={`todo-list-button ${statusType} `} type="text" defaultValue={this.props.toDoList.name} onBlur={this.handleNameChange} autoFocus/>
+                : <div className={`todo-list-button ${statusType} `} onClick={this.handleLoadList} onDoubleClick={() => {this.setState({nameBeingEdited: true})}}> {this.props.toDoList.name}<br/></div>
+                }
+            </div>
+            )
+        }
+    }
 export default ListLink;

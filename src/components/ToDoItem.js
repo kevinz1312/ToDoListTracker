@@ -64,7 +64,6 @@ class ToDoItem extends Component {
 
         return (
             <div id={'todo-list-item-' + listItem.id} className='list-item-card'>
- {/* onChange={this.handleDescriptionChange} */}
                 {taskBeingEdited 
                 ? <input className='task-col' type="text" defaultValue={listItem.description} onBlur={this.handleDescriptionChange} autoFocus/>
                 : <div className='task-col' onClick= { () => {this.setState({taskBeingEdited: true})}}>{listItem.description}</div>

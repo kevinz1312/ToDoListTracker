@@ -13,6 +13,13 @@
     --swatch-text:          #e9edf0; /* USED IN MOUSE-OVER SELECTION OF TEXT AND BORDERS */ 
     --swatch-text-accent:   #19c8ff; /* USED IN MOUSE-OVER SELECTION OF TEXT AND BORDERS */  
 
+    --light-blue: #8ed4f8;
+    --light-orange: #f5bc75;
+    --darkblue-gray: #2b2e36;
+    --blue-gray: #7e8084;
+    --hover-light: rgba(255,255,255, 0.7);
+    --warm-black: #322d2d;
+
     --font-primary:         'Consolas', sans-serif;
 }
 
@@ -117,4 +124,41 @@
 
 #add-item-button, #delete-list-button, #close-list-button {
     text-align: center;
+}
+
+.modal{
+    background-color: rgba(0,0,0,0.4);
+    backdrop-filter: blur(1px);
+    font-family: var(--font-primary);
+}
+
+.modal-content{
+    background-color: var(--swatch-complement);
+}
+
+
+.modal-top{
+    color: var(--swatch-text);
+    font-size: 14pt;
+    font-weight: bold;
+    text-align: left;
+    border-bottom: 2px dotted;
+}
+
+.modal-button {
+    color: var(--swatch-text);
+    cursor:pointer;
+    font-size: 12pt;
+}
+
+.modal-button:hover {
+    background-color: var(--hover-light);
+}
+
+.modal-close-button{
+    fill: var(--swatch-text);
+    cursor:pointer;
+}
+.modal-close-button:hover{
+    background-color: var(--hover-light);
 }

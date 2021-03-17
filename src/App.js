@@ -12,6 +12,7 @@ import ChangeItem_Transaction from './components/transactions/ChangeItem_Transac
 import Navbar from './components/Navbar'
 import LeftSidebar from './components/LeftSidebar'
 import Workspace from './components/Workspace'
+import Modal from './components/Modal'
 {/*import ItemsListHeaderComponent from './components/ItemsListHeaderComponent'
 import ItemsListComponent from './components/ItemsListComponent'
 import ListsComponent from './components/ListsComponent'
@@ -149,6 +150,8 @@ class App extends Component {
       toDoLists: newToDoListsList,
       currentList: {items: []},
     }, this.afterToDoListsChangeComplete);
+
+    this.hideModal();
   }
   
   deleteListItem = (toDoListItem) => {
@@ -224,6 +227,18 @@ class App extends Component {
     });
   }
 
+  closeList = () => {
+    let newToDoLists = this.state.toDoLists
+    //REMOVE HIGHLIGHT FROM ALL LISTS
+    newToDoLists.forEach((testList)=>{testList.highlight = "false";})
+
+    this.setState({
+      toDoLists: newToDoLists,
+      currentList: null
+    })
+  }
+
+  
   undoListItem = () => {
       if (this.tps.hasTransactionToUndo()) {
         this.tps.undoTransaction();
@@ -237,6 +252,19 @@ class App extends Component {
         // this.toggleUndoRedoButtons();
     }
   }
+  
+  toDoListChange = (toDoList, value) => {
+    let newToDoListLists = this.state.toDoLists;
+    const index = newToDoListLists.indexOf(toDoList);
+    
+    let tempToDoList = newToDoListLists[index];
+    tempToDoList.name = value;
+
+    this.setState({
+      toDoLists: newToDoListLists
+    })
+  }
+
 
   addNewItemTransaction = () => {
     let transaction = new AddNewItem_Transaction(this);
@@ -254,8 +282,22 @@ class App extends Component {
     this.tps.addTransaction(transaction);
   }
 
+  showModal = () => {
+    let modal = document.getElementById("delete-list-modal");
+    modal.style.display = "block";
+  }
+
+  hideModal = () => {
+    let modal = document.getElementById("delete-list-modal");
+    modal.style.display = "none";
+  }
+  
   render() {
-    let items = this.state.currentList.items;
+   let items = null;
+    if(this.state.currentList != null)
+      items = this.state.currentList.items;
+    else
+      items = [];
     return (
       <div id="root">
         <Navbar />
@@ -263,16 +305,21 @@ class App extends Component {
           toDoLists={this.state.toDoLists}
           loadToDoListCallback={this.loadToDoList}
           addNewListCallback={this.addNewList}
+          toDoListNameChangeCallback = {this.toDoListChange}
         />
         <Workspace 
           toDoListItems={items} 
           addNewToDoListItemCallback={this.addNewItemTransaction}
-          deleteListCallback={this.deleteList}
+          deleteListCallback={this.showModal}
           toDoListItemMoveCallback={this.toDoListItemMoveTransaction}
           toDoListItemChangeCallback = {this.toDoListItemChangeTransaction}
-          UndoListItemCallback = {this.undoListItem}
-          RedoListItemCallback = {this.redoListItem}
-
+          undoListItemCallback = {this.undoListItem}
+          redoListItemCallback = {this.redoListItem}
+          closeListCallback = {this.closeList}
+        />
+        <Modal 
+        confirmDeleteCallback ={this.deleteList}
+        handleHideModal = {this.hideModal}
         />
       </div>
     );

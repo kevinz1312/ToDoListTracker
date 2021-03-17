@@ -12,7 +12,7 @@ class LeftSidebar extends Component {
         this.props.addNewListCallback();
     }
 
-    render() {
+    render() { 
         return (
             <div id="left-sidebar">
                 <div id="left-sidebar-header" class="section-header">
@@ -31,7 +31,8 @@ class LeftSidebar extends Component {
                             key={toDoList.id}
                             highlight={toDoList.highlight}
                             toDoList={toDoList}// PASS THE LIST TO THE CHILDREN
-                            loadToDoListCallback={this.props.loadToDoListCallback} />  // PASS THE CALLBACK TO THE CHILDREN
+                            loadToDoListCallback={this.props.loadToDoListCallback}  // PASS THE CALLBACK TO THE CHILDREN
+                            toDoListNameChangeCallback={this.props.toDoListNameChangeCallback}/>
                     ))
                 }
                 </div>
