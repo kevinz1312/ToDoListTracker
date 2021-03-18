@@ -9,7 +9,8 @@ class LeftSidebar extends Component {
     }
 
     handleAddNewList = () => {
-        this.props.addNewListCallback();
+        if(!document.getElementById("add-list-button").classList.contains("disabled-button"))
+            this.props.addNewListCallback();
     }
 
     render() { 
@@ -20,7 +21,7 @@ class LeftSidebar extends Component {
                     <span class="left-sidebar-controls" id="add-undo-redo-box">
                         <AddBox 
                             id="add-list-button"
-                            className="material-icons todo_button"
+                            className="material-icons todo_button add-list-button"
                             onClick={this.handleAddNewList} />
                     </span>
                 </div>

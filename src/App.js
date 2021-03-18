@@ -83,7 +83,11 @@ class App extends Component {
     this.setState({
       toDoLists: nextLists,
       currentList: toDoList
-    });
+    },this.updateToDoListItemArrows);
+
+    this.tps.clearAllTransactions();
+    this.activeListItemButtons();
+    this.toggleUndoRedoButtons();
   }
 
   addNewList = () => {
@@ -114,7 +118,7 @@ class App extends Component {
       newToDoList.items.push(item)
       this.setState({
         currentList: newToDoList,
-      });
+      },this.updateToDoListItemArrows);
     }
 
     else{
@@ -125,7 +129,7 @@ class App extends Component {
       this.setState({
         currentList: newToDoList,
         nextListItemId: this.state.nextListItemId+1
-      });
+      },this.updateToDoListItemArrows);
       console.log("here")
       return newItem;
     }
@@ -145,13 +149,17 @@ class App extends Component {
     let newToDoListsList = this.state.toDoLists;
     newToDoListsList.shift();
 
+    this.hideModal();
+
+    this.tps.clearAllTransactions();
+    this.toggleUndoRedoButtons();
+    this.inactiveListItemButtons();
+
     // AND SET THE STATE, WHICH SHOULD FORCE A render
     this.setState({
       toDoLists: newToDoListsList,
       currentList: {items: []},
     }, this.afterToDoListsChangeComplete);
-
-    this.hideModal();
   }
   
   deleteListItem = (toDoListItem) => {
@@ -162,7 +170,8 @@ class App extends Component {
 
     this.setState({
       currentList: {items: newToDoItemsList}
-    });
+    },this.updateToDoListItemArrows);
+    
   }
 
   // THIS IS A CALLBACK FUNCTION FOR AFTER AN EDIT TO A LIST
@@ -200,7 +209,7 @@ class App extends Component {
 
     this.setState({
       currentList: {items: newToDoItemsList}
-    });
+    },this.updateToDoListItemArrows);
     return index;
   }
 
@@ -224,7 +233,7 @@ class App extends Component {
 
     this.setState({
       currentList: {items: newToDoItemsList}
-    });
+    },this.updateToDoListItemArrows);
   }
 
   closeList = () => {
@@ -236,20 +245,24 @@ class App extends Component {
       toDoLists: newToDoLists,
       currentList: null
     })
+
+    this.tps.clearAllTransactions();
+    this.toggleUndoRedoButtons();
+    this.inactiveListItemButtons();
   }
 
   
   undoListItem = () => {
       if (this.tps.hasTransactionToUndo()) {
         this.tps.undoTransaction();
-        // this.toggleUndoRedoButtons();
+        this.toggleUndoRedoButtons();
     }
   }
 
   redoListItem = () => {
       if (this.tps.hasTransactionToRedo()) {
         this.tps.doTransaction();
-        // this.toggleUndoRedoButtons();
+        this.toggleUndoRedoButtons();
     }
   }
   
@@ -269,17 +282,19 @@ class App extends Component {
   addNewItemTransaction = () => {
     let transaction = new AddNewItem_Transaction(this);
     this.tps.addTransaction(transaction);
-    // this.toggleUndoRedoButtons();
+    this.toggleUndoRedoButtons();
   }
 
   toDoListItemMoveTransaction = (toDoListItem, operation) => {
     let transaction = new MoveItem_Transaction(this, toDoListItem, operation);
     this.tps.addTransaction(transaction);
+    this.toggleUndoRedoButtons();
   }
 
   toDoListItemChangeTransaction = (toDoListItem, operation, value) => {
     let transaction = new ChangeItem_Transaction(this, toDoListItem, operation, value);
     this.tps.addTransaction(transaction);
+    this.toggleUndoRedoButtons();
   }
 
   showModal = () => {
@@ -291,7 +306,63 @@ class App extends Component {
     let modal = document.getElementById("delete-list-modal");
     modal.style.display = "none";
   }
+
+  inactiveUndoButton= () => {
+    document.getElementById("undo-button").classList.add("disabled-button");
+  }
+
+  activeUndoButton= () => {
+      document.getElementById("undo-button").classList.remove("disabled-button");
+  }
+
+  inactiveRedoButton= () => {
+      document.getElementById("redo-button").classList.add("disabled-button");
+  }
+
+  activeRedoButton= () => {
+      document.getElementById("redo-button").classList.remove("disabled-button");
+  }
+
+  activeListItemButtons(){
+    //TOGGLE BUTTONS FOR ACTIVE LIST
+    document.getElementById("add-list-button").classList.add("disabled-button");
+    document.getElementById("add-item-button").classList.remove("disabled-button");
+    document.getElementById("delete-list-button").classList.remove("disabled-button");
+    document.getElementById("close-list-button").classList.remove("disabled-button");
+  }
+
+  inactiveListItemButtons = () => {
+    //TOGGLE BUTTONS FOR INACTIVE LIST
+    document.getElementById("add-list-button").classList.remove("disabled-button");
+    document.getElementById("add-item-button").classList.add("disabled-button");
+    document.getElementById("delete-list-button").classList.add("disabled-button");
+    document.getElementById("close-list-button").classList.add("disabled-button");
+  }
+
+  toggleUndoRedoButtons = () => {
+    if(this.tps.hasTransactionToUndo())
+        this.activeUndoButton();
+    else
+        this.inactiveUndoButton();
+    if(this.tps.hasTransactionToRedo())
+        this.activeRedoButton();
+    else
+        this.inactiveRedoButton();
+    }
   
+    updateToDoListItemArrows = () => {
+      let toDoItemsList = this.state.currentList.items;
+      var i;
+
+      for (i = 0; i < toDoItemsList.length; i++) {
+        document.getElementById("todo-list-arrow-up-"+ toDoItemsList[i].id).classList.remove("disabled-button");
+        document.getElementById("todo-list-arrow-down-"+ toDoItemsList[i].id).classList.remove("disabled-button");
+      }
+
+      document.getElementById("todo-list-arrow-up-"+ toDoItemsList[0].id).classList.add("disabled-button");
+      document.getElementById("todo-list-arrow-down-"+ toDoItemsList[toDoItemsList.length - 1].id).classList.add("disabled-button");
+    }
+
   render() {
    let items = null;
     if(this.state.currentList != null)

@@ -24,11 +24,13 @@ class ToDoItem extends Component {
     }
 
     handleListItemUp = () => {
-        this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemUp");
+        if(!document.getElementById("todo-list-arrow-up-" + this.props.toDoListItem.id).classList.contains("disabled-button"))
+            this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemUp");
     }
 
     handleListItemDown = () => {
-        this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemDown");
+        if(!document.getElementById("todo-list-arrow-down-" + this.props.toDoListItem.id).classList.contains("disabled-button"))
+            this.props.toDoListItemMoveCallback(this.props.toDoListItem, "moveItemDown");
     }
 
     handleListItemClose = () => {
@@ -36,17 +38,20 @@ class ToDoItem extends Component {
     }
 
     handleDescriptionChange = (event) => {
-        this.props.toDoListItemChangeCallback(this.props.toDoListItem, "description", event.target.value);
+        if(event.target.value != this.props.toDoListItem.description)
+            this.props.toDoListItemChangeCallback(this.props.toDoListItem, "description", event.target.value);
         this.setState({taskBeingEdited : false})
     }
 
     handleDateChange = (event) => {
-        this.props.toDoListItemChangeCallback(this.props.toDoListItem, "date", event.target.value);
+        if(event.target.value != this.props.toDoListItem.due_date)
+            this.props.toDoListItemChangeCallback(this.props.toDoListItem, "date", event.target.value);
         this.setState({dateBeingEdited : false})
     }
 
     handleStatusChange = (event) => {
-        this.props.toDoListItemChangeCallback(this.props.toDoListItem, "status", event.target.value);
+        if(event.target.value != this.props.toDoListItem.status)
+            this.props.toDoListItemChangeCallback(this.props.toDoListItem, "status", event.target.value);
         this.setState({stausBeingEdited : false})
     }
 
@@ -81,8 +86,8 @@ class ToDoItem extends Component {
 
                 <div className='test-4-col'></div>
                 <div className='list-controls-col'>
-                    <KeyboardArrowUp className='list-item-control todo-button' onClick={this.handleListItemUp} />
-                    <KeyboardArrowDown className='list-item-control todo-button' onClick={this.handleListItemDown}/>
+                    <KeyboardArrowUp className='list-item-control todo-button' id={"todo-list-arrow-up-" + listItem.id}  onClick={this.handleListItemUp} />
+                    <KeyboardArrowDown className='list-item-control todo-button' id={"todo-list-arrow-down-" + listItem.id} onClick={this.handleListItemDown}/>
                     <Close className='list-item-control todo-button' onClick={this.handleListItemClose}/>
                     <div className='list-item-control'></div>
         <div className='list-item-control'></div>

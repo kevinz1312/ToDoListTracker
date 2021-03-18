@@ -98,7 +98,7 @@
 
 .todo-button {
     cursor:pointer;
-    background-color: var(--swatch-complement);
+    background-color: var(--swatch-primary);
     font-weight: bold;
 }
 
@@ -110,7 +110,7 @@
     background-color: var(--swatch-accent);
 }
 
-#add-list-button {
+.add-list-button {
     color: var(--swatch-accent);
 }
 
@@ -124,6 +124,15 @@
 
 #add-item-button, #delete-list-button, #close-list-button {
     text-align: center;
+}
+
+.disabled-button{
+    color:var(--warm-black);
+    cursor: default;
+}
+
+.disabled-button:hover{
+    background-color: transparent;
 }
 
 .modal{
