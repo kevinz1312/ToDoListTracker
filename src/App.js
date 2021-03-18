@@ -52,6 +52,21 @@ class App extends Component {
       }
     };
 
+    //REMOVE HIGHLIGHT
+    recentLists.forEach((testList)=>{testList.highlight = "false";})
+
+    //ADD EVENT LISTENER FOR UNDO
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.key === 'z') 
+        this.undoListItem();
+    });
+
+    //ADD EVENT LISTENER FOR REDO
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.key === 'y') 
+        this.redoListItem();
+    });
+
     // SETUP OUR APP STATE
     this.state = {
       toDoLists: recentLists,
@@ -83,7 +98,7 @@ class App extends Component {
     this.setState({
       toDoLists: nextLists,
       currentList: toDoList
-    },this.updateToDoListItemArrows);
+    },this.afterToDoListsChangeComplete);
 
     this.tps.clearAllTransactions();
     this.activeListItemButtons();
@@ -105,7 +120,8 @@ class App extends Component {
 
   loadTopList = () => {
     this.afterToDoListsChangeComplete();
-    this.loadToDoList(this.state.currentList)
+    this.loadToDoList(this.state.currentList);
+    this.afterToDoListsChangeComplete();
   }
 
   makeNewToDoList = () => {
@@ -184,7 +200,7 @@ class App extends Component {
     console.log("App updated currentToDoList: " + this.state.currentList);
 
     let toDoListSave = this.state.toDoLists;
-    toDoListSave.forEach((testList)=>{testList.highlight = "false";})
+    // toDoListSave.forEach((testList)=>{testList.highlight = "false";})
 
     // WILL THIS WORK? @todo
     let toDoListsString = JSON.stringify(toDoListSave);
@@ -233,8 +249,10 @@ class App extends Component {
     if(operation === "description")
     tempItem.description = value;
 
-    else if (operation === "date")
-    tempItem.due_date = value;
+    else if (operation === "date"){
+      if (value !== "")
+        tempItem.due_date = value;
+    }
 
     else if (operation === "status"){
     tempItem.status = value;
@@ -262,7 +280,6 @@ class App extends Component {
     this.inactiveListItemButtons();
   }
 
-  
   undoListItem = () => {
       if (this.tps.hasTransactionToUndo()) {
         this.tps.undoTransaction();
@@ -281,14 +298,12 @@ class App extends Component {
     let newToDoListLists = this.state.toDoLists;
     const index = newToDoListLists.indexOf(toDoList);
     
-    let tempToDoList = newToDoListLists[index];
-    tempToDoList.name = value;
+    newToDoListLists[index].name = value;
 
     this.setState({
       toDoLists: newToDoListLists
-    })
+    },this.afterToDoListsChangeComplete)
   }
-
 
   addNewItemTransaction = () => {
     let transaction = new AddNewItem_Transaction(this);
@@ -376,7 +391,7 @@ class App extends Component {
       }
     }
 
-  render() {
+    render() {
    let items = null;
     if(this.state.currentList != null)
       items = this.state.currentList.items;
