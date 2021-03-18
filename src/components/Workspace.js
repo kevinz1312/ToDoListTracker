@@ -22,15 +22,15 @@ class Workspace extends Component {
             this.props.deleteListCallback();
     }
 
-    handleUndoListItem = () => {
-        if(!document.getElementById("undo-button").classList.contains("disabled-button"))
-            this.props.undoListItemCallback();
-    }
+    // handleUndoListItem = () => {
+    //     if(!document.getElementById("undo-button").classList.contains("disabled-button"))
+    //         this.props.undoListItemCallback();
+    // }
 
-    handleRedoListItem = () => {
-        if(!document.getElementById("redo-button").classList.contains("disabled-button"))
-            this.props.redoListItemCallback();
-    }
+    // handleRedoListItem = () => {
+    //     if(!document.getElementById("redo-button").classList.contains("disabled-button"))
+    //         this.props.redoListItemCallback();
+    // }
 
     handleCloseList = () => {
         if(!document.getElementById("close-list-button").classList.contains("disabled-button"))
@@ -44,9 +44,11 @@ class Workspace extends Component {
                     <div id="task-col-header" className="item-col todo-button">Task</div>
                     <div id="date-col-header" className="item-col todo-button">Due Date</div>
                     <div id="status-col-header" className="item-col todo-button">Status</div>
+                    <div className='test-4-col'></div>
+                    
                     <div className="item-col" display="flex" flexDirection="row" flexWrap="nowrap">
-                        <Undo id="undo-button" className="list-item-control material-icons todo-button disabled-button" onClick={this.handleUndoListItem}/>
-                        <Redo id="redo-button" className="list-item-control material-icons todo-button disabled-button" onClick={this.handleRedoListItem}/>
+                        {/* <Undo id="undo-button" className="list-item-control material-icons todo-button disabled-button" onClick={this.handleUndoListItem}/>
+                        <Redo id="redo-button" className="list-item-control material-icons todo-button disabled-button" onClick={this.handleRedoListItem}/> */}
                         <AddBox id="add-item-button" className="list-item-control material-icons todo-button disabled-button" onClick={this.handleAddNewListItem} />
                         <Delete id="delete-list-button" className="list-item-control material-icons todo-button disabled-button" onClick={this.handleDeleteList}/>
                         <Close id="close-list-button" className="list-item-control material-icons todo-button disabled-button" onClick={this.handleCloseList}/>

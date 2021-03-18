@@ -13,6 +13,7 @@
     --swatch-text:          #e9edf0; /* USED IN MOUSE-OVER SELECTION OF TEXT AND BORDERS */ 
     --swatch-text-accent:   #19c8ff; /* USED IN MOUSE-OVER SELECTION OF TEXT AND BORDERS */  
 
+    --warm-white-transparent: #f9f7f111; 
     --light-blue: #8ed4f8;
     --light-orange: #f5bc75;
     --darkblue-gray: #2b2e36;
@@ -83,7 +84,7 @@
 }
 
 .list-item-card:hover {
-    background-color: var(--swatch-contrast);
+    background-color: var(--warm-white-transparent);
 }
 
 .todo-list-button {
@@ -93,17 +94,39 @@
 }
 
 .todo-list-button:hover {
-    background-color: var(--swatch-contrast);
+    background-color: var(--warm-white-transparent);
 }
 
 .todo-button {
     cursor:pointer;
-    background-color: var(--swatch-primary);
+    background-color: transparent;
     font-weight: bold;
 }
 
 .todo-button:hover {
-    background-color: var(--swatch-contrast);
+    background-color: var(--hover-light);
+}
+
+#task-col-header:hover{
+    background-color: var(--warm-white-transparent);
+}
+
+#date-col-header:hover{
+    background-color: var(--warm-white-transparent);
+}
+
+#status-col-header:hover{
+    background-color: var(--warm-white-transparent);
+}
+
+.left-sidebar-button{
+    cursor: pointer;
+    background-color: var(--swatch-complement);
+    font-weight: bold;
+}
+
+.left-sidebar-button:hover{
+    background-color: var(--warm-white-transparent);
 }
 
 .todo-list-selected{

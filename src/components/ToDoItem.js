@@ -81,10 +81,11 @@ class ToDoItem extends Component {
 
                 {stausBeingEdited
                 ? <select class='status-col' onBlur={this.handleStatusChange} defaultValue = {listItem.status} autoFocus><option value='complete'>Complete</option> <option value='incomplete'>Incomplete</option></select>
-                : <div className='status-col' className={statusType} onClick= { () => {this.setState({stausBeingEdited: true})}}>{listItem.status}</div>
+                : <div className={`status-col ${statusType}`} onClick= { () => {this.setState({stausBeingEdited: true})}}>{listItem.status}</div>
                 } 
 
                 <div className='test-4-col'></div>
+                
                 <div className='list-controls-col'>
                     <KeyboardArrowUp className='list-item-control todo-button' id={"todo-list-arrow-up-" + listItem.id}  onClick={this.handleListItemUp} />
                     <KeyboardArrowDown className='list-item-control todo-button' id={"todo-list-arrow-down-" + listItem.id} onClick={this.handleListItemDown}/>

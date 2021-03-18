@@ -100,7 +100,12 @@ class App extends Component {
       toDoLists: newToDoListsList,
       currentList: newToDoList,
       nextListId: this.state.nextListId+1
-    }, this.afterToDoListsChangeComplete);
+    }, this.loadTopList);
+  }
+
+  loadTopList = () => {
+    this.afterToDoListsChangeComplete();
+    this.loadToDoList(this.state.currentList)
   }
 
   makeNewToDoList = () => {
@@ -118,7 +123,7 @@ class App extends Component {
       newToDoList.items.push(item)
       this.setState({
         currentList: newToDoList,
-      },this.updateToDoListItemArrows);
+      },this.afterToDoListsChangeComplete);
     }
 
     else{
@@ -129,7 +134,7 @@ class App extends Component {
       this.setState({
         currentList: newToDoList,
         nextListItemId: this.state.nextListItemId+1
-      },this.updateToDoListItemArrows);
+      },this.afterToDoListsChangeComplete);
       console.log("here")
       return newItem;
     }
@@ -170,7 +175,7 @@ class App extends Component {
 
     this.setState({
       currentList: {items: newToDoItemsList}
-    },this.updateToDoListItemArrows);
+    },this.afterToDoListsChangeComplete);
     
   }
 
@@ -178,9 +183,15 @@ class App extends Component {
   afterToDoListsChangeComplete = () => {
     console.log("App updated currentToDoList: " + this.state.currentList);
 
+    let toDoListSave = this.state.toDoLists;
+    toDoListSave.forEach((testList)=>{testList.highlight = "false";})
+
     // WILL THIS WORK? @todo
-    let toDoListsString = JSON.stringify(this.state.toDoLists);
-    localStorage.setItem("recent_work", toDoListsString);
+    let toDoListsString = JSON.stringify(toDoListSave);
+    localStorage.setItem("recentLists", toDoListsString);
+
+    //TOGGLE BUTTONS
+    this.updateToDoListItemArrows();
   }
 
   toDoListItemMove = (toDoListItem, operation, transactionIndex) => {
@@ -209,7 +220,7 @@ class App extends Component {
 
     this.setState({
       currentList: {items: newToDoItemsList}
-    },this.updateToDoListItemArrows);
+    },this.afterToDoListsChangeComplete);
     return index;
   }
 
@@ -233,7 +244,7 @@ class App extends Component {
 
     this.setState({
       currentList: {items: newToDoItemsList}
-    },this.updateToDoListItemArrows);
+    },this.afterToDoListsChangeComplete);
   }
 
   closeList = () => {
@@ -354,13 +365,15 @@ class App extends Component {
       let toDoItemsList = this.state.currentList.items;
       var i;
 
-      for (i = 0; i < toDoItemsList.length; i++) {
-        document.getElementById("todo-list-arrow-up-"+ toDoItemsList[i].id).classList.remove("disabled-button");
-        document.getElementById("todo-list-arrow-down-"+ toDoItemsList[i].id).classList.remove("disabled-button");
-      }
+      if (toDoItemsList.length !== 0) {
+        for (i = 0; i < toDoItemsList.length; i++) {
+          document.getElementById("todo-list-arrow-up-"+ toDoItemsList[i].id).classList.remove("disabled-button");
+          document.getElementById("todo-list-arrow-down-"+ toDoItemsList[i].id).classList.remove("disabled-button");
+        }
 
-      document.getElementById("todo-list-arrow-up-"+ toDoItemsList[0].id).classList.add("disabled-button");
-      document.getElementById("todo-list-arrow-down-"+ toDoItemsList[toDoItemsList.length - 1].id).classList.add("disabled-button");
+        document.getElementById("todo-list-arrow-up-"+ toDoItemsList[0].id).classList.add("disabled-button");
+        document.getElementById("todo-list-arrow-down-"+ toDoItemsList[toDoItemsList.length - 1].id).classList.add("disabled-button");
+      }
     }
 
   render() {
@@ -377,6 +390,8 @@ class App extends Component {
           loadToDoListCallback={this.loadToDoList}
           addNewListCallback={this.addNewList}
           toDoListNameChangeCallback = {this.toDoListChange}
+          undoListItemCallback = {this.undoListItem}
+          redoListItemCallback = {this.redoListItem}
         />
         <Workspace 
           toDoListItems={items} 
@@ -384,8 +399,8 @@ class App extends Component {
           deleteListCallback={this.showModal}
           toDoListItemMoveCallback={this.toDoListItemMoveTransaction}
           toDoListItemChangeCallback = {this.toDoListItemChangeTransaction}
-          undoListItemCallback = {this.undoListItem}
-          redoListItemCallback = {this.redoListItem}
+          // undoListItemCallback = {this.undoListItem}
+          // redoListItemCallback = {this.redoListItem}
           closeListCallback = {this.closeList}
         />
         <Modal 
